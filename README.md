@@ -1,59 +1,124 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+# Catálogo de Recetas en Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este proyecto es la evaluación práctica de Desarrollo Web con Laravel. Consiste en una aplicación web tipo catálogo que permite visualizar, filtrar y registrar nuevas recetas de cocina de forma temporal mediante el uso de sesiones y colecciones.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
+## 1. Servidor Activo
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<img width="1908" height="958" alt="image" src="https://github.com/user-attachments/assets/acbd33ad-2355-4e38-820c-a5c9255a7cea" />
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 2. Árbol de Directorios del Proyecto
 
-## Laravel Sponsors
+```text
+Evaluacion1Laravel/
+├── app/
+│   └── Http/
+│       └── Controllers/
+│           └── RecetaController.php   
+├── routes/
+│   └── web.php                         
+├── resources/
+│   └── views/
+│       ├── components/
+│       │   └── recipe-card.blade.php   
+│       ├── layouts/
+│       │   └── app.blade.php           
+│       └── recetas/
+│           ├── index.blade.php         
+│           ├── show.blade.php          
+│           └── create.blade.php
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 3.Instalación y Ejecución 
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# 1. Clonar el repositorio
+git clone [https://github.com/Rafitaps/Evaluacion1Laravel.git]
 
-## Contributing
+# 2. Entrar a la carpeta del proyecto
+cd Evaluacion1Laravel
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 3. Instalar dependencias de PHP
+composer install
+<img width="946" height="56" alt="image" src="https://github.com/user-attachments/assets/aaca870b-c0ac-43bc-ab16-60499db2c999" />
 
-## Code of Conduct
+# 4. Copiar el archivo de entorno
+cp .env.example .env
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 5. Generar la clave de la aplicación
+php artisan key:generate
 
-## Security Vulnerabilities
+# 6. Iniciar el servidor local
+php artisan serve
+<img width="914" height="215" alt="image" src="https://github.com/user-attachments/assets/7de857f8-85ca-456d-bd1f-42d4fd1c67a9" />
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 4. Desarrollo y Explicación de Conceptos
 
-## License
+-- ¿Qué es un Controlador? --
+Es una clase que actúa como intermediario entre las rutas, los datos y las vistas. Contiene la lógica de negocio.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-- Uso de Colecciones y Filtrado: --
+En Laravel, las colecciones son una envoltura para los arrays de PHP. Permiten manipular datos encadenando métodos como filter() o where() de forma limpia, sin usar bucles foreach tradicionales en el backend.
+
+--Fragmento de Receta.Controller.php:--
+
+public function index(Request $request)
+{
+    // Convertimos el array normal a una Colección de Laravel
+    $recetas = collect($this->recetas);
+
+    // Filtrado condicional usando colecciones
+    if ($request->filled('search')) {
+        $searchTerm = strtolower($request->search);
+        // Usamos el método filter() de la colección
+        $recetas = $recetas->filter(function ($receta) use ($searchTerm) {
+            return str_contains(strtolower($receta['name']), $searchTerm);
+        });
+    }
+
+    if ($request->filled('difficulty')) {
+        // Usamos el método where() para búsquedas exactas
+        $recetas = $recetas->where('difficulty', $request->difficulty);
+    }
+
+    return view('recetas.index', compact('recetas'));
+}
+
+-- ¿Cómo actúan los parámetros de ruta? --
+Los parámetros de ruta permiten capturar segmentos dinámicos de la URL. En nuestra ruta Route::get('/receta/{id}', ...), el {id} es el parámetro. Laravel lo extrae de la URL (ej: /receta/3) y se lo pasa automáticamente como argumento a la función show($id) del controlador.
+
+-- Diferencia entre @extends y @component: --
+
+@extends('layouts.app'): Se usa para heredar la estructura de una página "madre" (Layout). Define el cascarón de la página y deja "huecos" (@yield) para que las vistas hijas inyecten su contenido.
+
+@component o @include: Se usa para incrustar un trozo pequeño de código (un componente reutilizable) dentro de una vista más grande.
+
+-- Ejemplo de herencia: --
+@extends('layouts.app') @section('content')
+    @endsection
+
+-- Uso de @foreach vs @forelse: --
+
+@foreach: Itera sobre una lista o array. 
+
+@forelse: Es una mejora de Laravel. Hace lo mismo que @foreach, pero incluye la cláusula @empty, que permite definir un diseño alternativo en caso de que la colección no tenga datos.
+
+-- Ejemplo: --
+<div class="grid">
+    @forelse($recetas as $receta)
+        @include('components.recipe-card', ['recipe' => $receta])
+    @empty
+        <div class="mensaje-vacio">
+            <p>No hay resultados que coincidan con tus filtros.</p>
+        </div>
+    @endforelse
+</div>
+
+-- Subir proyecto a Github --
+<img width="922" height="229" alt="image" src="https://github.com/user-attachments/assets/3944e4ce-254e-40fb-8cf0-3066d1bb6927" />
+<img width="942" height="234" alt="image" src="https://github.com/user-attachments/assets/2cb0f666-b837-4aea-a8e3-d95bc523a979" />
