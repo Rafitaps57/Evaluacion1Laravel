@@ -32,7 +32,7 @@ Evaluacion1Laravel/
 │           ├── index.blade.php         
 │           ├── show.blade.php          
 │           └── create.blade.php
-
+```
 ---
 
 ## 3.Instalación y Ejecución 
